@@ -62,7 +62,7 @@ async def main():
     # Scheduler for periodic updates
     scheduler = AsyncIOScheduler()
     scheduler.start()
-    scheduler.add_job(send_message, 'interval', args=[application], minutes=30)
+    scheduler.add_job(send_message, 'interval', args=[application], minutes=1)
 
     # Start bot
     await application.initialize()
