@@ -1,3 +1,4 @@
+from fastapi import FastAPI
 import asyncio
 import requests
 from bs4 import BeautifulSoup
@@ -13,6 +14,12 @@ URL_EURO = "https://www.tgju.org/profile/price_eur"
 URL_GOLD = "https://www.tgju.org/profile/geram18"
 HEADERS = {'User-Agent': 'Mozilla/5.0'}
 
+app = FastAPI()
+
+@app.get("/")
+def read_root():
+    return {"message": "Hello World"}
+    
 # Function to fetch Euro price
 def get_euro_price():
     try:
