@@ -5,6 +5,12 @@ from bs4 import BeautifulSoup
 from telegram.ext import Application
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
+app = FastAPI()
+
+@app.get("/")
+def read_root():
+    return {"message": "Hello World"}
+
 # Telegram bot token and chat IDs
 TELEGRAM_BOT_TOKEN = "7304148206:AAGFKiddvSoaKe0zxToMqcJccPmLhPgcH6c"
 CHAT_IDS = ["7197413077", "260674127"]  # Add more IDs here
@@ -14,12 +20,6 @@ URL_EURO = "https://www.tgju.org/profile/price_eur"
 URL_GOLD = "https://www.tgju.org/profile/geram18"
 HEADERS = {'User-Agent': 'Mozilla/5.0'}
 
-app = FastAPI()
-
-@app.get("/")
-def read_root():
-    return {"message": "Hello World"}
-    
 # Function to fetch Euro price
 def get_euro_price():
     try:
