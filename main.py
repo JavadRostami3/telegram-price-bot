@@ -48,7 +48,7 @@ def get_gold_price():
         return f"Error in Gold price fetch: {e}"
 
 # Function to fetch Silver price
-def get_gold_price():
+def get_silver_price():
     try:
         response = requests.get(URL_SILVER, headers=HEADERS)
         if response.status_code == 200:
