@@ -4,80 +4,69 @@ from bs4 import BeautifulSoup
 from telegram.ext import Application
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
-# Telegram bot token
-TELEGRAM_BOT_TOKEN = "7304148206:AAGFKiddvSoaKe0zxToMqcJccPmLhPgcH6c"
-CHAT_IDS = ["7197413077", "1234567890", "9876543210"]  # List of chat IDs
+# Telegram bot token and chat IDs
+TELEGRAM_BOT_TOKEN = "your-telegram-bot-token"
+CHAT_IDS = ["123456789", "987654321"]  # Add more IDs here
 
-# URLs of web pages
+# URLs for fetching prices
 URL_EURO = "https://www.tgju.org/profile/price_eur"
 URL_GOLD = "https://www.tgju.org/profile/geram18"
 HEADERS = {'User-Agent': 'Mozilla/5.0'}
 
-# Function to fetch the price of Euro
+# Function to fetch Euro price
 def get_euro_price():
     try:
         response = requests.get(URL_EURO, headers=HEADERS)
         if response.status_code == 200:
             soup = BeautifulSoup(response.content, 'html.parser')
             span_tag = soup.find('span', {'data-col': 'info.last_trade.PDrCotVal'})
-            if span_tag:
-                return span_tag.get_text(strip=True)
-            else:
-                return "Euro not found."
+            return span_tag.get_text(strip=True) if span_tag else "Euro price not found."
         else:
-            return "Error fetching Euro."
+            return "Error fetching Euro price."
     except Exception as e:
-        return f"Error in Euro: {e}"
+        return f"Error in Euro price fetch: {e}"
 
-# Function to fetch the price of 18K Gold
+# Function to fetch Gold price
 def get_gold_price():
     try:
         response = requests.get(URL_GOLD, headers=HEADERS)
         if response.status_code == 200:
             soup = BeautifulSoup(response.content, 'html.parser')
             span_tag = soup.find('span', {'data-col': 'info.last_trade.PDrCotVal'})
-            if span_tag:
-                return span_tag.get_text(strip=True)
-            else:
-                return "Gold not found."
+            return span_tag.get_text(strip=True) if span_tag else "Gold price not found."
         else:
-            return "Error fetching Gold."
+            return "Error fetching Gold price."
     except Exception as e:
-        return f"Error in Gold: {e}"
+        return f"Error in Gold price fetch: {e}"
 
 # Function to send messages
 async def send_message(application: Application):
     euro_price = get_euro_price()
     gold_price = get_gold_price()
-    message = f"💶 Euro Price: {euro_price} Toman\n💰 18K Gold Price: {gold_price} Toman"
-    for chat_id in CHAT_IDS:  # Send messages to all chat IDs
-        try:
-            await application.bot.send_message(chat_id=chat_id, text=message)
-        except Exception as e:
-            print(f"Error sending message to {chat_id}: {e}")
+    message = f"💶 Euro Price: {euro_price} Toman\n💰 Gold (18K): {gold_price} Toman"
+    for chat_id in CHAT_IDS:
+        await application.bot.send_message(chat_id=chat_id, text=message)
 
-# Main function to run the program
+# Main function
 async def main():
     print("Bot is running...")
     application = Application.builder().token(TELEGRAM_BOT_TOKEN).build()
 
-    # Message scheduling
+    # Scheduler for periodic updates
     scheduler = AsyncIOScheduler()
     scheduler.start()
-
-    # Add scheduling to the event loop
     scheduler.add_job(send_message, 'interval', args=[application], minutes=30)
 
-    # Run the bot
+    # Start bot
     await application.initialize()
     await application.start()
     await application.updater.start_polling()
     try:
-        await asyncio.Event().wait()  # Keep the program running
+        await asyncio.Event().wait()
     finally:
         await application.stop()
         await application.shutdown()
 
-# Start the program
+# Entry point
 if __name__ == "__main__":
     asyncio.run(main())
