@@ -5,8 +5,8 @@ from telegram.ext import Application
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
 # Telegram bot token and chat IDs
-TELEGRAM_BOT_TOKEN = "your-telegram-bot-token"
-CHAT_IDS = ["123456789", "987654321"]  # Add more IDs here
+TELEGRAM_BOT_TOKEN = "7304148206:AAGFKiddvSoaKe0zxToMqcJccPmLhPgcH6c"
+CHAT_IDS = ["7197413077", "260674127"]  # Add more IDs here
 
 # URLs for fetching prices
 URL_EURO = "https://www.tgju.org/profile/price_eur"
