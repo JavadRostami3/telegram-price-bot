@@ -18,6 +18,7 @@ CHAT_IDS = ["7197413077", "260674127"]  # Add more IDs here
 # URLs for fetching prices
 URL_EURO = "https://www.tgju.org/profile/price_eur"
 URL_GOLD = "https://www.tgju.org/profile/geram18"
+URL_SILVER ="https://www.tgju.org/profile/silver_999"
 HEADERS = {'User-Agent': 'Mozilla/5.0'}
 
 # Function to fetch Euro price
@@ -46,11 +47,25 @@ def get_gold_price():
     except Exception as e:
         return f"Error in Gold price fetch: {e}"
 
+# Function to fetch Silver price
+def get_gold_price():
+    try:
+        response = requests.get(URL_SILVER, headers=HEADERS)
+        if response.status_code == 200:
+            soup = BeautifulSoup(response.content, 'html.parser')
+            span_tag = soup.find('span', {'data-col': 'info.last_trade.PDrCotVal'})
+            return span_tag.get_text(strip=True) if span_tag else "Silver price not found."
+        else:
+            return "Error fetching Silver price."
+    except Exception as e:
+        return f"Error in Silver price fetch: {e}"
+
 # Function to send messages
 async def send_message(application: Application):
     euro_price = get_euro_price()
     gold_price = get_gold_price()
-    message = f"💶 Euro Price: {euro_price} Toman\n💰 Gold (18K): {gold_price} Toman"
+    silver_price = get_silver_price()
+    message = f"💶 قیمت یورو: {euro_price} Toman\n💰قیمت طلا: {gold_price} Toman\n قیمت نقره: {silver_price}"
     for chat_id in CHAT_IDS:
         await application.bot.send_message(chat_id=chat_id, text=message)
 
